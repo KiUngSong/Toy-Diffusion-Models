@@ -1,12 +1,14 @@
 import os, sys
 from pytorch_lightning.cli import LightningCLI
+from dataset.toy_2d import DATA_NAME
 
 
 class Lightning_Run(LightningCLI):
     def add_arguments_to_parser(self, parser):
         parser.add_argument("--mode", type=str, default="train", choices=["train", "test",])
-        parser.add_argument("--data_name", type=str)
-        parser.add_argument("--diffusion_type", type=str)
+        parser.add_argument("--data_name", type=str,
+                            choices=DATA_NAME+["mnist"])
+        parser.add_argument("--diffusion_type", type=str, choices=["ddpm", "sde", "discrete"])
         parser.add_argument("--discrete", type=bool, default=False)
         parser.add_argument("--load_train", type=bool)
         parser.add_argument("--ckpt_path", type=str)
@@ -17,7 +19,7 @@ class Lightning_Run(LightningCLI):
 
 
 if __name__ == "__main__":
-    sys.path.append(os.getcwd()+"/toy_diffusion_models")
+    sys.path.append(os.getcwd()+"/Toy-Diffusion-Models")
     cli = Lightning_Run(save_config_overwrite=True, run=False,)
 
     if cli.config["mode"] == "train":

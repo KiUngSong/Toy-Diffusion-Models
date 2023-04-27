@@ -1,6 +1,8 @@
+import os, sys
+sys.path.append(os.getcwd()+"/Toy-Diffusion-Models")
 import torch
 import torch.nn as nn
-from .utils import timestep_embedding, ResBlock, Downsample, Upsample, Block
+from model.utils import timestep_embedding, ResBlock, Downsample, Upsample, Block
 
 
 class UNet(nn.Module):

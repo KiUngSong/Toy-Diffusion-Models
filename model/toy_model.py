@@ -1,7 +1,9 @@
+import os, sys
+sys.path.append(os.getcwd()+"/Toy-Diffusion-Models")
 import torch
 import torch.nn as nn
 import numpy as np
-from .utils import timestep_embedding
+from model.utils import timestep_embedding
 
 
 class ToyNet(nn.Module):

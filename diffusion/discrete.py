@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 from torch.distributions.categorical import Categorical
 import os, sys
-sys.path.append(os.getcwd()+"/toy_diffusion_models")
+sys.path.append(os.getcwd()+"/Toy-Diffusion-Models")
 
 from dataset import save2img, make_gif
 from diffusion import DiffusionProcess
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     from model import UNet
 
     discrete = True
-    device = "cuda:3"
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
     dataloader = get_dataloader(data_name="mnist", discrete=discrete, batch_size=16, num_workers=4)
     batch = next(iter(dataloader))

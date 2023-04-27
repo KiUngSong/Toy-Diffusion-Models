@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 import os, sys
-sys.path.append(os.getcwd()+"/toy_diffusion_models")
+sys.path.append(os.getcwd()+"/Toy-Diffusion-Models")
 
 from dataset import save2img, make_gif
 from diffusion.utils.sde import SDE
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     from dataset import get_dataloader
 
     discrete = False
-    device = "cuda:3"
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
     dataloader = get_dataloader(data_name="mnist", discrete=discrete, batch_size=16, num_workers=4)
     batch = next(iter(dataloader))
