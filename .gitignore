@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+data
+checkpoint/
+results/
+*.png
+*.gif
+
+# for IDE
+.idea/*
+*.code-workspace
+.vscode
