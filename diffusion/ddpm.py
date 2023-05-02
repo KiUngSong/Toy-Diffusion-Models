@@ -43,7 +43,7 @@ class DDPMProcess(DiffusionProcess):
         """
         # Approximate x_0 by NN
         pred_x_0 = self.predict_x_0(x_t, t, pred_noise)
-        if clip_denoised and len(x_t.size()) > 2:
+        if clip_denoised and x_t.ndim > 2:
             pred_x_0.clamp_(-1., 1.)
 
         # Sample from q_posterior q(x_{t-1}|x_t, x_0)
@@ -58,7 +58,7 @@ class DDPMProcess(DiffusionProcess):
         Sample from backward diffusion process
         """
         x_t = noise
-        data_type = "toy" if len(x_t.size()) == 2 else "img"
+        data_type = "toy" if x_t.ndim == 2 else "img"
 
         save2img(x_t, self.result_dir + f"x_{self.total_steps}.png", data_type, self.discrete)
         trajectory = [self.result_dir + f"x_{self.total_steps}.png"]

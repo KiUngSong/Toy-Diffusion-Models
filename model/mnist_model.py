@@ -64,6 +64,7 @@ class UNet(nn.Module):
         self.final_conv = Block(pre_channel, out_channel, groups=norm_groups)
 
     def forward(self, x, t: int):
+        x.clamp_(-1., 1.)
         t = torch.ones(x.shape[0], device=x.device) * t
         t_emb = timestep_embedding(t, self.time_embed_dim)
         t_emb = self.time_embed(t_emb)

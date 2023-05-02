@@ -1,6 +1,6 @@
 seed_everything: 2023
 mode: train
-data_name: &data_name 8gaussians
+data_name: &data_name mnist
 diffusion_type: &diffusion_type sde
 discrete: &discrete False
 load_train: False
@@ -20,7 +20,7 @@ trainer:
   accelerator: gpu
   devices:
     - 0
-  max_epochs: 200
+  max_epochs: 1000
   callbacks+:
     - class_path: ModelCheckpoint
       init_args:
@@ -34,9 +34,9 @@ model:
     diffusion_type: *diffusion_type
     data_name: *data_name
     discrete: *discrete
-    total_steps: 100
+    total_steps: 250
     lr: 2.5e-4
-    sde_type: "VE"
+    sde_type: "subVP"
 
 data:
   class_path: trainer.DiffusionDataModule
@@ -44,5 +44,5 @@ data:
     data_name: *data_name
     discrete: *discrete
     batch_size: 256
-    test_batch_size: 512
-    num_workers: 8
+    test_batch_size: 64
+    num_workers: 16

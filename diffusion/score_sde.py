@@ -39,7 +39,7 @@ class SDEProcess(DiffusionProcess):
         f_t, g_t = self.sde.drifts(x_t, t)
 
         x_prev = x_t - (f_t - g_t**2 * pred_score) * self.dt + g_t * z * np.sqrt(self.dt)
-        if clip_denoised and len(x_t.size()) > 2:
+        if clip_denoised and x_t.ndim > 2:
             x_prev.clamp_(-1., 1.)
 
         return x_prev
@@ -50,7 +50,7 @@ class SDEProcess(DiffusionProcess):
         Sample from backward diffusion process
         """
         x_t = noise
-        data_type = "toy" if len(x_t.size()) == 2 else "img"
+        data_type = "toy" if x_t.ndim == 2 else "img"
 
         save2img(x_t, self.result_dir + f"x_{self.total_steps}.png", data_type, self.discrete)
         trajectory = [self.result_dir + f"x_{self.total_steps}.png"]
