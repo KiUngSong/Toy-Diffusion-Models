@@ -3,7 +3,7 @@ sys.path.append(os.getcwd()+"/Toy-Diffusion-Models")
 import torch
 import torch.nn as nn
 import numpy as np
-from model.utils import timestep_embedding
+from model.utils import timestep_embedding, timesteps_to_tensor
 
 
 class ToyNet(nn.Module):
@@ -19,8 +19,8 @@ class ToyNet(nn.Module):
         self.x_module = ResNet_FC(2, dim, num_res_blocks=3)
         self.out_module = nn.Sequential(nn.Linear(dim,dim), nn.SiLU(), nn.Linear(dim, out_dim),)
 
-    def forward(self, x, t: int):
-        t = torch.ones(x.shape[0], device=x.device) * t
+    def forward(self, x, t: int or list[int]):
+        t = timesteps_to_tensor(t, batch_size=x.shape[0]).to(x.device)
         t_emb = timestep_embedding(t, self.time_embed_dim)
 
         t_out = self.t_module(t_emb)

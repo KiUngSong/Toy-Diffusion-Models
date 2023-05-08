@@ -2,7 +2,8 @@ import os, sys
 sys.path.append(os.getcwd()+"/Toy-Diffusion-Models")
 import torch
 import torch.nn as nn
-from model.utils import timestep_embedding, ResBlock, Downsample, Upsample, Block
+from model.utils import (timestep_embedding, timesteps_to_tensor, 
+                         ResBlock, Downsample, Upsample, Block)
 
 
 class UNet(nn.Module):
@@ -63,9 +64,9 @@ class UNet(nn.Module):
 
         self.final_conv = Block(pre_channel, out_channel, groups=norm_groups)
 
-    def forward(self, x, t: int):
+    def forward(self, x, t: int or list[int]):
         x.clamp_(-1., 1.)
-        t = torch.ones(x.shape[0], device=x.device) * t
+        t = timesteps_to_tensor(t, batch_size=x.shape[0]).to(x.device)
         t_emb = timestep_embedding(t, self.time_embed_dim)
         t_emb = self.time_embed(t_emb)
         

@@ -4,15 +4,14 @@ import torch.nn.functional as F
 import math
 
 
-# Utils for Toy model
+# Timestep Embedding
 def timestep_embedding(timesteps, dim, max_period=10000):
     """
     Create sinusoidal timestep embeddings.
-    :param timesteps: a 1-D Tensor of N indices, one per batch element.
-                      These may be fractional.
-    :param dim: the dimension of the output.
-    :param max_period: controls the minimum frequency of the embeddings.
-    :return: an [N x dim] Tensor of positional embeddings.
+        timesteps: [N] dimensional tensor of int.
+        dim: the dimension of the output.
+        max_period: controls the minimum frequency of the embeddings.
+        return: an [N x dim] Tensor of positional embeddings.
     """
     half = dim // 2
     freqs = torch.exp(
@@ -24,6 +23,16 @@ def timestep_embedding(timesteps, dim, max_period=10000):
         embedding = torch.cat([embedding, torch.zeros_like(embedding[:, :1])], dim=-1)
     return embedding
 
+def timesteps_to_tensor(ts: int or list[int], batch_size):
+    if isinstance(ts, list):
+        assert batch_size % len(ts) == 0, "batch_size must be divisible by length of timesteps list"
+    
+    if isinstance(ts, int):
+        return ts * torch.ones(batch_size)
+    else:
+        mini_batch_size = batch_size // len(ts)
+        return torch.cat([ts[i] * torch.ones(mini_batch_size) for i in range(len(ts))])
+    
 
 # Utils for MNIST model
 class Upsample(nn.Module):
@@ -103,16 +112,15 @@ class ResBlock(nn.Module):
 
 
 if __name__ == '__main__':
-    import numpy as np
-
     # Check dimension of timestep embedding if get confused
-    # t = np.random.randint(1, 100 + 1)
     t = 1
-    t_emb1 = timestep_embedding(t * torch.ones(32), 128)
-    print(t_emb1.shape)
-
-    t = 2
-    t_emb2 = timestep_embedding(t * torch.ones(32), 128)
+    t_emb = timestep_embedding(t * torch.ones(32), 128)
+    print(t_emb.shape)
+    
+    ts = [1, 2, 3, 4]
+    ts = timesteps_to_tensor(ts, 16)
+    t_emb = timestep_embedding(ts, 128)
+    print(t_emb.shape)
 
     # Check dimension of self-attention if get confused
     attn = SelfAtt(128, 8)
