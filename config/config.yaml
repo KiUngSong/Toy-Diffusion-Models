@@ -20,13 +20,14 @@ trainer:
   accelerator: gpu
   devices:
     - 0
-  max_epochs: 1000
+  max_epochs: 2000
   callbacks+:
     - class_path: ModelCheckpoint
       init_args:
         monitor: train_loss
         mode: min
         save_last: True
+  gradient_clip_val: 1.
 
 model:
   class_path: trainer.DiffusionModule
@@ -34,7 +35,7 @@ model:
     diffusion_type: *diffusion_type
     data_name: *data_name
     discrete: *discrete
-    total_steps: 250
+    total_steps: 500
     lr: 2.5e-4
     sde_type: "subVP"
 

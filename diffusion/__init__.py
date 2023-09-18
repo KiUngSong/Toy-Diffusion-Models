@@ -39,6 +39,8 @@ class DiffusionProcess(ABC):
         x_t = x_0
         for t in range(1, self.total_steps+1):
             x_t = self.forward_one_step(x_t, t)
+            if x_t.ndim > 2:
+                x_t.clamp_(-1., 1.)
             save2img(x_t, self.result_dir + f"x_{t}.png", data_type, self.discrete)
             trajectory.append(self.result_dir + f"x_{t}.png")
         
